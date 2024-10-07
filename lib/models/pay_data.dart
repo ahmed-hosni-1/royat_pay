@@ -2,13 +2,13 @@ class PayData {
   PayData({
     required this.order,
     required this.customer,
-    required this.card,
-    required this.user,
+     this.card,
+     this.user,
   });
 
   final Order? order;
   final Customer? customer;
-  final Card? card;
+  Card? card;
   User? user;
 
   PayData copyWith({
@@ -51,10 +51,10 @@ class Card {
     required this.cvv,
   });
 
-  final String number;
-  final String exMonth;
-  final String exYear;
-  final String cvv;
+  String number;
+  String exMonth;
+  String exYear;
+  String cvv;
 
   Card copyWith({
     String? number,
@@ -89,20 +89,24 @@ class Card {
 
 class Customer {
   Customer({
-    required this.name,
+     this.name,
+     this.lastName,
     required this.email,
     required this.phone,
     required this.city,
+    required this.country,
     required this.address,
-    this.zip,
+    this.zip = "12345",
     this.ip,
     // required this.redirect,
   });
 
-  final String name;
+  late  String? name;
+  final String? lastName;
   final String email;
   final String phone;
   final String city;
+  final String country;
   final String address;
   String? zip;
   String? ip;
@@ -126,6 +130,7 @@ class Customer {
       address: address ?? this.address,
       zip: zip ?? this.zip,
       ip: ip ?? this.ip,
+      country: country ?? this.country, lastName: '',
       // redirect: redirect ?? this.redirect,
     );
   }
@@ -138,7 +143,7 @@ class Customer {
       city: json["city"] ?? "",
       address: json["address"] ?? "",
       zip: json["zip"] ?? "",
-      ip: json["ip"] ?? "",
+      ip: json["ip"] ?? "", lastName: '', country: '',
       // redirect: json["redirect"] ?? "",
     );
   }

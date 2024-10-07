@@ -81,6 +81,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  edfapg_sdk:
+    dependency: transitive
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: dd17d2ce6c2de96477f1d8e7d5b6c1cdf958f575
+      url: "https://github.com/ahmed-hosni-1/edfa-pg-flutter-sdk.git"
+    source: git
+    version: "0.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -136,6 +145,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0"
   lints:
     dependency: transitive
     description:
@@ -219,8 +236,8 @@ packages:
   royat_pay:
     dependency: "direct main"
     description:
-      path: "D:\\free\\saidoz\\royat_pay"
-      relative: false
+      path: ".."
+      relative: true
     source: path
     version: "0.0.1"
   sky_engine:

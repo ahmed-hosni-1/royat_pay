@@ -36,7 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   royat_pay:
-    path: D:\free\saidoz\royat_pay
+    path: ../../royat_pay
 
 dev_dependencies:
   flutter_test:

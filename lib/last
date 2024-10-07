@@ -1,0 +1,129 @@
+library royat_pay;
+
+import 'package:edfapg_sdk/edfapg_sdk.dart' as royat;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:royat_pay/models/error_response.dart';
+import 'package:royat_pay/models/pay_data.dart';
+import 'package:royat_pay/models/redirect_response.dart';
+import 'package:royat_pay/royat_iframe.dart';
+
+import 'services/apis_servicese.dart';
+
+class RoyatPay {
+  // singleton
+  RoyatPay._();
+
+  /// to get the instance of royatPay
+  static RoyatPay instance = RoyatPay._();
+  late String _key;
+  late String _password;
+
+  /// to init the royatPay
+  init({required String key, required String password}) {
+    _key = key;
+    _password = password;
+  }
+
+  ErrorResponse? _errorResponse;
+  late RedirectResponse _redirectResponse;
+
+  /// on error call
+  onError(ErrorResponse errorResponse) {}
+
+  /// to get the error response
+  ErrorResponse? getErrorResponse() {
+    return _errorResponse;
+  }
+
+  /// to make a payment with card
+  void payWithCard(
+      {required BuildContext context,
+      required PayData payData,
+      required Function onSuccess}) async {
+    payData.user = User(key: _key, password: _password);
+    var response = await ApisServices.instance.payWithCard(payData);
+    if (kDebugMode) {
+      debugPrint("========== RoyatPay ==========");
+      debugPrint(response.data);
+      debugPrint("========== RoyatPay ==========");
+    }
+    if (response.statusCode == 200 && response.data['result'] == 'ERROR') {
+      _errorResponse = ErrorResponse.fromJson(response.data);
+
+      onError(_errorResponse!);
+    } else if (response.statusCode == 200 &&
+        response.data['result'] == 'redirect') {
+      _redirectResponse = RedirectResponse.fromJson(response.data);
+      RoyatIFrame.show(
+          context: context,
+          redirectResponse: _redirectResponse,
+          onSuccess: onSuccess);
+    } else if (response.statusCode == 200 && response.data['result'] == true) {
+      onSuccess();
+    }
+  }
+
+  void payWithApplePay({
+    required BuildContext context,
+    required String merchantId,
+    required Order order,
+    required Customer customer,
+    required Function(Map<dynamic, dynamic>) onError,
+    required Function(Map<dynamic, dynamic>) onTransactionFailure,
+    required dynamic Function(Map<dynamic, dynamic>) onTransactionSuccess,
+    required dynamic Function(Map<dynamic, dynamic>) onAuthentication,
+  }) {
+    royat.EdfaPgSaleOrder saleOrder = royat.EdfaPgSaleOrder(
+      amount: order.amount,
+      currency: "SAR",
+      description: order.description,
+      id: order.id,
+    );
+    royat.EdfaPgPayer payer = royat.EdfaPgPayer(
+      ip: customer.ip,
+      city: customer.city,
+      address: customer.address,
+      zip: customer.zip,
+      firstName: customer.name,
+      lastName: customer.lastName,
+      email: customer.email,
+      phone: customer.phone,
+      country: customer.country,
+    );
+
+    royat.EdfaApplePay()
+        .setOrder(saleOrder)
+        .setPayer(payer)
+        .setApplePayMerchantID(merchantId)
+        .onAuthentication((response) {
+      if (kDebugMode) {
+        debugPrint("========== RoyatPay ==========");
+        debugPrint("onAuthentication.response ===> ${response.toString()}");
+        debugPrint("========== RoyatPay ==========");
+      }
+      onAuthentication(response);
+    }).onTransactionSuccess((response) {
+      if (kDebugMode) {
+        debugPrint("========== RoyatPay ==========");
+        debugPrint("onTransactionSuccess.response ===> ${response.toString()}");
+        debugPrint("========== RoyatPay ==========");
+      }
+      onTransactionSuccess(response);
+    }).onTransactionFailure((response) {
+      if (kDebugMode) {
+        debugPrint("========== RoyatPay ==========");
+        debugPrint("onTransactionFailure.response ===> ${response.toString()}");
+        debugPrint("========== RoyatPay ==========");
+      }
+      onTransactionFailure(response);
+    }).onError((error) {
+      if (kDebugMode) {
+        debugPrint("========== RoyatPay ==========");
+        debugPrint("onError.response ===> ${error.toString()}");
+        debugPrint("========== RoyatPay ==========");
+      }
+      onError(error);
+    }).initialize(context);
+  }
+}

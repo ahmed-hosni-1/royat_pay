@@ -1,0 +1,47 @@
+PODS:
+  - edfapg_sdk (1.0.0):
+    - EdfaPgSdk (~> 1.0.6)
+    - Flutter
+  - EdfaPgSdk (1.0.7)
+  - Flutter (1.0.0)
+  - flutter_credit_card (0.0.1):
+    - Flutter
+  - network_info_plus (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - edfapg_sdk (from `.symlinks/plugins/edfapg_sdk/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_credit_card (from `.symlinks/plugins/flutter_credit_card/ios`)
+  - network_info_plus (from `.symlinks/plugins/network_info_plus/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - EdfaPgSdk
+
+EXTERNAL SOURCES:
+  edfapg_sdk:
+    :path: ".symlinks/plugins/edfapg_sdk/ios"
+  Flutter:
+    :path: Flutter
+  flutter_credit_card:
+    :path: ".symlinks/plugins/flutter_credit_card/ios"
+  network_info_plus:
+    :path: ".symlinks/plugins/network_info_plus/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+
+SPEC CHECKSUMS:
+  edfapg_sdk: 6791b4055ec40143f66f9fbcc6917d065ef5fe0d
+  EdfaPgSdk: 80a002e3419de3ad741cf34fc99b06985c30e6a1
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_credit_card: 48fb35065294868bc6a3e7f18a42f28929b84f48
+  network_info_plus: 9d930145451916919786087c4173226363616071
+  webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
+
+PODFILE CHECKSUM: 1959d098c91d8a792531a723c4a9d7e9f6a01e38
+
+COCOAPODS: 1.15.2

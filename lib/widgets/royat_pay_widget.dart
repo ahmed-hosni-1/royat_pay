@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:royat_pay/models/pay_data.dart';
+import 'package:royat_pay/royat_pay.dart';
 
 import 'app_colors.dart';
 
@@ -10,6 +11,8 @@ class RoyatPayWidget extends StatefulWidget {
   String expiryDate = '';
   String cardHolderName = '';
   String cvvCode = '';
+  PayData payData;
+  Function onSuccess;
   bool isCvvFocused = false;
   bool useGlassMorphism = false;
   bool useBackgroundImage = false;
@@ -17,10 +20,8 @@ class RoyatPayWidget extends StatefulWidget {
 
   RoyatPayWidget(
       {
-      required this.cardNumber,
-      required this.expiryDate,
-      required this.cardHolderName,
-      required this.cvvCode,
+      required this.payData,
+      required this.onSuccess,
       this.isCvvFocused = false,
       this.useGlassMorphism = false,
       this.useBackgroundImage = false,
@@ -62,20 +63,20 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                 ),
               ),
               CreditCardWidget(
-                enableFloatingCard:  widget.useFloatingAnimation,
+                enableFloatingCard: widget.useFloatingAnimation,
                 glassmorphismConfig: _getGlassmorphismConfig(),
-                cardNumber:  widget.cardNumber,
-                expiryDate:  widget.expiryDate,
-                cardHolderName:  widget.cardHolderName,
-                cvvCode:  widget.cvvCode,
+                cardNumber: widget.cardNumber,
+                expiryDate: widget.expiryDate,
+                cardHolderName: widget.cardHolderName,
+                cvvCode: widget.cvvCode,
                 bankName: 'Royat Pay',
-                frontCardBorder:  widget.useGlassMorphism
+                frontCardBorder: widget.useGlassMorphism
                     ? null
                     : Border.all(color: Colors.grey),
-                backCardBorder:  widget.useGlassMorphism
+                backCardBorder: widget.useGlassMorphism
                     ? null
                     : Border.all(color: Colors.grey),
-                showBackView:  widget.isCvvFocused,
+                showBackView: widget.isCvvFocused,
                 obscureCardNumber: true,
                 obscureCardCvv: true,
                 isHolderNameVisible: true,
@@ -83,19 +84,11 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                     ? AppColors.cardBgLightColor
                     : AppColors.cardBgColor,
                 backgroundImage:
-                widget.useBackgroundImage ? 'assets/card_bg.png' : null,
+                    widget.useBackgroundImage ? 'assets/card_bg.png' : null,
                 isSwipeGestureEnabled: true,
-                onCreditCardWidgetChange:
-                    (CreditCardBrand creditCardBrand) {},
+                onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
                 customCardTypeIcons: <CustomCardTypeIcon>[
-                  // CustomCardTypeIcon(
-                  //   cardType: CardType.mastercard,
-                  //   cardImage: Image.asset(
-                  //     'assets/mastercard.png',
-                  //     height: 48,
-                  //     width: 48,
-                  //   ),
-                  // ),
+
                 ],
               ),
               Expanded(
@@ -105,14 +98,14 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                       CreditCardForm(
                         formKey: formKey,
                         obscureCvv: true,
-                        obscureNumber: true,
-                        cardNumber:  widget.cardNumber,
-                        cvvCode:  widget.cvvCode,
+                        obscureNumber: false,
+                        cardNumber: widget.cardNumber,
+                        cvvCode: widget.cvvCode,
                         isHolderNameVisible: true,
                         isCardNumberVisible: true,
                         isExpiryDateVisible: true,
-                        cardHolderName:  widget.cardHolderName,
-                        expiryDate:  widget.expiryDate,
+                        cardHolderName: widget.cardHolderName,
+                        expiryDate: widget.expiryDate,
                         inputConfiguration: const InputConfiguration(
                           cardNumberDecoration: InputDecoration(
                             labelText: 'Number',
@@ -195,37 +188,35 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                       // ),
                       const SizedBox(height: 20),
                       GestureDetector(
-                        onTap: _onValidate,
+                        onTap: () {
+                          widget.payData.card = Card(number: widget.cardNumber.replaceAll(" ", ""),
+                              exMonth:  widget.expiryDate.split('/')[0],
+                              exYear:  widget.expiryDate.split('/')[1].length == 2 ? "20${widget.expiryDate.split('/')[1]}" : widget.expiryDate.split('/')[1],
+                              cvv:  widget.cvvCode);
+                            widget.payData.customer?.name = widget.cardHolderName;
+
+                          _onValidate(
+                              payData: widget.payData,
+                              context: context,
+                              onSuccess: widget.onSuccess);
+                        },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
                           decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: <Color>[
-                                AppColors.colorB58D67,
-                                AppColors.colorB58D67,
-                                AppColors.colorE5D1B2,
-                                AppColors.colorF9EED2,
-                                AppColors.colorEFEFED,
-                                AppColors.colorF9EED2,
-                                AppColors.colorB58D67,
-                              ],
-                              begin: Alignment(-1, -4),
-                              end: Alignment(1, 4),
-                            ),
+                            color: Color(0xff101010),
                             borderRadius: BorderRadius.all(
                               Radius.circular(8),
                             ),
                           ),
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           alignment: Alignment.center,
                           child: const Text(
-                            'Validate',
+                            'Pay',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontFamily: 'halter',
                               fontSize: 14,
                               package: 'flutter_credit_card',
@@ -233,6 +224,8 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      Image.asset("assets/royat.png",width: 120,)
                     ],
                   ),
                 ),
@@ -244,16 +237,20 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
     );
   }
 
-  void _onValidate() {
+  void _onValidate(
+      {required PayData payData,
+      required BuildContext context,
+      required Function onSuccess}) {
     if (formKey.currentState?.validate() ?? false) {
-      print('valid!');
+      RoyatPay.instance.payWithCard(
+          context: context, payData: payData, onSuccess: onSuccess);
     } else {
       print('invalid!');
     }
   }
 
   Glassmorphism? _getGlassmorphismConfig() {
-    if (! widget.useGlassMorphism) {
+    if (!widget.useGlassMorphism) {
       return null;
     }
 
