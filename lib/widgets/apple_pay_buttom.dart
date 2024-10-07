@@ -50,7 +50,7 @@ class RoyatApplePayButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.apple,

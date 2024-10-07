@@ -84,11 +84,10 @@ packages:
   edfapg_sdk:
     dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: dd17d2ce6c2de96477f1d8e7d5b6c1cdf958f575
-      url: "https://github.com/ahmed-hosni-1/edfa-pg-flutter-sdk.git"
-    source: git
+      name: edfapg_sdk
+      sha256: "17513ce3b27874b4097e11af1897473d9050f1a0324f83bd30f983f800aad7e4"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.1"
   fake_async:
     dependency: transitive

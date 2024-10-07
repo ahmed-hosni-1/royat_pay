@@ -19,8 +19,7 @@ class RoyatPayWidget extends StatefulWidget {
   bool useFloatingAnimation = true;
 
   RoyatPayWidget(
-      {
-      required this.payData,
+      {required this.payData,
       required this.onSuccess,
       this.isCvvFocused = false,
       this.useGlassMorphism = false,
@@ -69,7 +68,7 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                 expiryDate: widget.expiryDate,
                 cardHolderName: widget.cardHolderName,
                 cvvCode: widget.cvvCode,
-                bankName: 'Royat Pay',
+                bankName: 'RoyatPay',
                 frontCardBorder: widget.useGlassMorphism
                     ? null
                     : Border.all(color: Colors.grey),
@@ -87,9 +86,7 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                     widget.useBackgroundImage ? 'assets/card_bg.png' : null,
                 isSwipeGestureEnabled: true,
                 onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
-                customCardTypeIcons: <CustomCardTypeIcon>[
-
-                ],
+                customCardTypeIcons: <CustomCardTypeIcon>[],
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -108,7 +105,7 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                         expiryDate: widget.expiryDate,
                         inputConfiguration: const InputConfiguration(
                           cardNumberDecoration: InputDecoration(
-                            labelText: 'Number',
+                            labelText: 'Card Number',
                             hintText: 'XXXX XXXX XXXX XXXX',
                           ),
                           expiryDateDecoration: InputDecoration(
@@ -189,11 +186,15 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
-                          widget.payData.card = Card(number: widget.cardNumber.replaceAll(" ", ""),
-                              exMonth:  widget.expiryDate.split('/')[0],
-                              exYear:  widget.expiryDate.split('/')[1].length == 2 ? "20${widget.expiryDate.split('/')[1]}" : widget.expiryDate.split('/')[1],
-                              cvv:  widget.cvvCode);
-                            widget.payData.customer?.name = widget.cardHolderName;
+                          widget.payData.card = Card(
+                              number: widget.cardNumber.replaceAll(" ", ""),
+                              exMonth: widget.expiryDate.split('/')[0],
+                              exYear:
+                                  widget.expiryDate.split('/')[1].length == 2
+                                      ? "20${widget.expiryDate.split('/')[1]}"
+                                      : widget.expiryDate.split('/')[1],
+                              cvv: widget.cvvCode);
+                          widget.payData.customer?.name = widget.cardHolderName;
 
                           _onValidate(
                               payData: widget.payData,
@@ -225,7 +226,10 @@ class _RoyatPayWidgetState extends State<RoyatPayWidget> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Image.asset("assets/royat.png",width: 120,)
+                      Image.network(
+                        "https://www.royat.sa/wp-content/plugins/RoyatPayPlugin/assets/royat.png",
+                        width: 120,
+                      )
                     ],
                   ),
                 ),

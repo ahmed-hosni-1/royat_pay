@@ -7,7 +7,8 @@ import 'package:royat_pay/widgets/royat_pay_widget.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  RoyatPay.instance.init(key: "66512373-572e-490c-8381-ffbd22c444ad",
+  RoyatPay.instance.init(
+      key: "66512373-572e-490c-8381-ffbd22c444ad",
       password: "90099107384dd8138112b2c75d06f598");
   runApp(const MyApp());
 }
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body:  Center(
+      body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -113,37 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(onPressed: () {
-              RoyatPay.instance.payWithApplePay(context: context,
-                merchantId: "merchant.Edfa.Partner.Royat.Ask",
-                order:Order(id: "1", amount: 100,
-                    description: "description"),
-                  customer: Customer(
-                    name: "name",
-                    email: "email",
-                    phone: "phone",
-                    address: "address",
-                    city: "city",
-                    country: "country",
-                    lastName: "lastName",
-                  ),
-                  onError: (error) {
-
-                  },
-                  onTransactionFailure: (response) {
-
-                  },
-                  onTransactionSuccess: (response) {
-
-                  },
-                  onAuthentication: (response) {
-
-                  },);
-            }, child: const Text("Pay")),
             RoyatApplePayButton(
               merchantId: "merchant.Edfa.Partner.Royat.Ask",
-              order:Order(id: "1", amount: 100,
-                  description: "description"),
+              order: Order(id: "1", amount: 100, description: "description"),
               customer: Customer(
                 name: "name",
                 email: "email",
@@ -153,18 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 country: "country",
                 lastName: "lastName",
               ),
-              onError: (error) {
-
-              },
-              onTransactionFailure: (response) {
-
-              },
-              onTransactionSuccess: (response) {
-
-              },
-              onAuthentication: (response) {
-
-              },),
+              onError: (error) {},
+              onTransactionFailure: (response) {},
+              onTransactionSuccess: (response) {},
+              onAuthentication: (response) {},
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -172,35 +138,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   useFloatingAnimation: false,
                   useGlassMorphism: false,
                   useBackgroundImage: true,
-                  onSuccess: (){
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  },
-                  payData: PayData(order: Order(id: "234234",
-                      amount: 100,
-                      description: "description"),
+                  onSuccess: () {},
+                  payData: PayData(
+                      order: Order(
+                          id: "234234",
+                          amount: 100,
+                          description: "description"),
                       customer: Customer(
-                        name: "na me",
-                        email: "ahmed@gmail.com",
-                        phone: "1234536453",
-                        address: "address",
-                        city: "city",
-                        country: "egypt",
-                        lastName: "lastName",
-                        zip: "12345"
-                      )),
+                          name: "na me",
+                          email: "ahmed@gmail.com",
+                          phone: "1234536453",
+                          address: "address",
+                          city: "city",
+                          country: "egypt",
+                          lastName: "lastName",
+                          zip: "12345")),
                 ),
               ),
             ),
