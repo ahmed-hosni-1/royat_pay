@@ -15,6 +15,7 @@ dependencies:
   network_info_plus:
   flutter_credit_card:
   edfapg_sdk:
+    git: https://github.com/ahmed-hosni-1/edfa-pg-flutter-sdk
 
 dev_dependencies:
   flutter_test:
