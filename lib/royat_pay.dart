@@ -91,7 +91,8 @@ class RoyatPay {
     required Function(Map<dynamic, dynamic> response)
         onAuthentication, // Callback for authentication
   }) {
-    // Create sale order object
+    try{
+        // Create sale order object
     final saleOrder = royat.EdfaPgSaleOrder(
       amount: order.amount, // Amount to be charged
       currency: "SAR", // Currency code
@@ -118,26 +119,41 @@ class RoyatPay {
         .setPayer(payer) // Set the payer details
         .setApplePayMerchantID(merchantId) // Set the Apple Pay Merchant ID
         .onAuthentication((response) {
+                          _logResponse("onAuthentication");
+
       _logResponse(response);
       onAuthentication(response);
         },) // Set authentication callback
         .onTransactionSuccess((response) {
+                _logResponse("onTransactionSuccess");
+
       _logResponse(response);
       onTransactionSuccess(response);
 
 ;        },) // Set transaction success callback
         .onTransactionFailure((response) {
+                                    _logResponse("onTransactionFailure");
+
       _logResponse(response);
       onTransactionFailure(response);
 
         },) // Set transaction failure callback
         .onError((response) {
+                                              _logResponse("onError");
+
       _logResponse(response);
 
       onError(response);
 
         },) // Set error callback
         .initialize(context); // Initialize payment processing
+    }catch(e){
+                                          _logResponse("catch Error");
+      
+                                          _logResponse(e);
+
+    }
+  
   }
 
   /// Log response data for debugging purposes.
