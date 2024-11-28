@@ -102,16 +102,22 @@ class RoyatPay {
 
     // Create payer object with customer details
     final payer = royat.EdfaPgPayer(
-      ip: customer.ip, // Customer's IP address
-      city: customer.city, // Customer's city
-      address: customer.address, // Customer's address
-      zip: customer.zip, // Customer's ZIP code
-      firstName: customer.name, // Customer's first name
-      lastName: customer.lastName, // Customer's last name
-      email: customer.email, // Customer's email address
-      phone: customer.phone, // Customer's phone number
-      country: customer.country, // Customer's country
-    );
+        ip: customer.ip ?? "66.249.64.248", // Customer's IP address
+        city: customer.city, // Customer's city
+        address: customer.address, // Customer's address
+        zip: customer.zip??"123768", // Customer's ZIP code
+        firstName: customer.name, // Customer's first name
+        lastName: customer.lastName, // Customer's last name
+        email: customer.email, // Customer's email address
+        phone: customer.phone, // Customer's phone number
+        country: customer.country, // Customer's country
+        options: royat.EdfaPgPayerOption(
+          middleName: customer.name,
+          birthdate: DateTime.parse("1987-03-30"),
+          address2: "Usman Bin Affan",
+          state: "Al Izdihar",
+        ));
+
 
     // Initialize Apple Pay payment
     royat.EdfaApplePay()
