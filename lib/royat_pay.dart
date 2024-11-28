@@ -106,9 +106,9 @@ class RoyatPay {
         city: customer.city, // Customer's city
         address: customer.address, // Customer's address
         zip: customer.zip??"123768", // Customer's ZIP code
-        firstName: customer.name, // Customer's first name
-        lastName: customer.lastName, // Customer's last name
-        email: customer.email, // Customer's email address
+        firstName: customer.name??"Ahmed Moahmed", // Customer's first name
+        lastName: customer.lastName??"Ahmed Moahmed", // Customer's last name
+        email: customer.email??"info@royat.sa", // Customer's email address
         phone: customer.phone, // Customer's phone number
         country: customer.country, // Customer's country
         options: royat.EdfaPgPayerOption(
