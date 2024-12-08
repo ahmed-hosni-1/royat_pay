@@ -169,17 +169,20 @@ class Order {
 
   final String id;
   final num amount;
+	final String                                     currency;
   final String description;
 
   Order copyWith({
     String? id,
     num? amount,
     String? description,
+	  String? currency,
   }) {
     return Order(
       id: id ?? this.id,
       amount: amount ?? this.amount,
       description: description ?? this.description,
+	    currency: currency ?? this.currency,
     );
   }
 
