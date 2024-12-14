@@ -164,6 +164,8 @@ class Order {
   Order({
     required this.id,
     required this.amount,
+	      required this.currency,
+
     required this.description,
   });
 
@@ -190,6 +192,7 @@ class Order {
     return Order(
       id: json["id"] ?? "",
       amount: json["amount"] ?? 0,
+	   currency: json["currency"] ?? "SAR", 
       description: json["description"] ?? "",
     );
   }
@@ -198,6 +201,7 @@ class Order {
         "id": id,
         "amount": amount.toStringAsFixed(2),
         "description": description,
+	  "currency" : currency
       };
 }
 
