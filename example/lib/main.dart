@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       order: Order(
                           id: "234234",
                           amount: 100,
-                          description: "description"),
+                          description: "description", currency: ''),
                       customer: Customer(
                           name: "na me",
                           email: "ahmed@gmail.com",
