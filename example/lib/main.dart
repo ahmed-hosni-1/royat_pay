@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart' hide Card;
+import 'package:royat_pay/models/order_model.dart';
 import 'package:royat_pay/models/pay_data.dart';
+import 'package:royat_pay/models/payer_model.dart';
+import 'package:royat_pay/models/payer_option_model.dart';
 import 'package:royat_pay/royat_pay.dart';
 import 'package:royat_pay/widgets/apple_pay_buttom.dart';
 import 'package:royat_pay/widgets/royat_pay_widget.dart';
@@ -8,8 +11,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   RoyatPay.instance.init(
-      key: "66512373-572e-490c-8381-ffbd22c444ad",
-      password: "90099107384dd8138112b2c75d06f598");
+      key: "",
+      password: "");
   runApp(const MyApp());
 }
 
@@ -96,29 +99,23 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             RoyatApplePayButton(
-              merchantId: "merchant.Edfa.Partner.Royat.Ask",
-              order: Order(id: "1", amount: 100, description: "description"),
-              customer: Customer(
-                name: "name",
+              merchantId: "merchantId",
+              order: RoyatOrder(id: "1", amount: 100, description: "description",currency: "SAR"),
+              payer: RoyatPayer(
+                firstName: "firstName",
+                ip: "ip",
+                zip: "123",
+                options: RoyatPayerOption(
+                  address2: "address2",
+                  birthdate: DateTime.now(),
+                  middleName: "middleName",
+                  state: "state",
+                ),
                 email: "email",
                 phone: "phone",
                 address: "address",
@@ -155,9 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           zip: "12345")),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
             ),
             // ElevatedButton(onPressed: () {}, child: const Text("Pay"))
           ],

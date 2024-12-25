@@ -4,7 +4,9 @@ import 'package:edfapg_sdk/edfapg_sdk.dart' as royat;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:royat_pay/models/error_response.dart';
+import 'package:royat_pay/models/order_model.dart';
 import 'package:royat_pay/models/pay_data.dart';
+import 'package:royat_pay/models/payer_model.dart';
 import 'package:royat_pay/models/redirect_response.dart';
 import 'package:royat_pay/royat_iframe.dart';
 import 'services/apis_servicese.dart';
@@ -80,86 +82,119 @@ class RoyatPay {
   void payWithApplePay({
     required BuildContext context, // Build context for displaying UI elements
     required String merchantId, // Merchant ID for Apple Pay
-    required Order order, // Order details including amount, description, etc.
-    required Customer customer, // Customer details for billing
+    required RoyatOrder order, // Order details including amount, description, etc.
+    required RoyatPayer payer, // Environment for Apple Pay
+    // required String currency,
+    // required Customer customer, // Customer details for billing
     required Function(Map<dynamic, dynamic> error)
-        onError, // Callback for error during payment
+    onError, // Callback for error during payment
     required Function(Map<dynamic, dynamic> response)
-        onTransactionFailure, // Callback for transaction failure
+    onTransactionFailure, // Callback for transaction failure
     required Function(Map<dynamic, dynamic> response)
-        onTransactionSuccess, // Callback for successful transaction
+    onTransactionSuccess, // Callback for successful transaction
     required Function(Map<dynamic, dynamic> response)
-        onAuthentication, // Callback for authentication
+    onAuthentication, // Callback for authentication
   }) {
     try{
-        // Create sale order object
-    final saleOrder = royat.EdfaPgSaleOrder(
-      amount: order.amount, // Amount to be charged
-      currency: "SAR", // Currency code
-      description: order.description, // Description of the order
-      id: order.id, // Unique order ID
-    );
 
-    // Create payer object with customer details
-    final payer = royat.EdfaPgPayer(
-        ip: customer.ip ?? "66.249.64.248", // Customer's IP address
-        city: customer.city, // Customer's city
-        address: customer.address, // Customer's address
-        zip: customer.zip??"123768", // Customer's ZIP code
-        firstName: customer.name??"Ahmed Moahmed", // Customer's first name
-        lastName: customer.lastName??"Ahmed Moahmed", // Customer's last name
-        email: customer.email??"info@royat.sa", // Customer's email address
-        phone: customer.phone, // Customer's phone number
-        country: customer.country, // Customer's country
+
+      // Initialize payment gateway
+
+      royat.EdfaPgSaleOrder royatOrder = royat.EdfaPgSaleOrder(
+        amount: order.amount,
+        currency: order.currency,
+        description: order.description,
+        id: order.id,
+      );
+
+
+      royat.EdfaPgPayer royatPayer = royat.EdfaPgPayer(
+        ip: payer.ip,
+        city: payer.city,
+        address: payer.address,
+        zip: payer.zip,
+        firstName: payer.firstName,
+        lastName: payer.lastName,
+        email: payer.email,
+        phone: payer.phone,
+        country: payer.country,
         options: royat.EdfaPgPayerOption(
-          middleName: customer.name,
-          birthdate: DateTime.parse("1987-03-30"),
-          address2: "Usman Bin Affan",
-          state: "Al Izdihar",
-        ));
+          address2: payer.options?.address2,
+          state: payer.options?.state,
+          birthdate: payer.options?.birthdate,
+          middleName: payer.options?.middleName
+        )
+      );
 
 
-    // Initialize Apple Pay payment
-    royat.EdfaApplePay()
-        .setOrder(saleOrder) // Set the sale order
-        .setPayer(payer) // Set the payer details
-        .setApplePayMerchantID(merchantId) // Set the Apple Pay Merchant ID
-        .onAuthentication((response) {
-                          _logResponse("onAuthentication");
+      // // Create sale order object
+      // final saleOrder = royat.EdfaPgSaleOrder(
+      //   amount: order.amount, // Amount to be charged
+      //   currency: currency, // Currency code
+      //   description: order.description, // Description of the order
+      //   id: order.id, // Unique order ID
+      // );
 
-      _logResponse(response);
-      onAuthentication(response);
-        },) // Set authentication callback
-        .onTransactionSuccess((response) {
-                _logResponse("onTransactionSuccess");
+      // Create payer object with customer details
+      // final payer = royat.EdfaPgPayer(
+      //     ip: customer.ip ?? "66.249.64.248", // Customer's IP address
+      //     city: customer.city, // Customer's city
+      //     address: customer.address, // Customer's address
+      //     zip: customer.zip??"123768", // Customer's ZIP code
+      //     firstName: customer.name??"Ahmed Moahmed", // Customer's first name
+      //     lastName: customer.lastName??"Ahmed Moahmed", // Customer's last name
+      //     email: customer.email??"info@royat.sa", // Customer's email address
+      //     phone: customer.phone, // Customer's phone number
+      //     country: customer.country, // Customer's country
+      //     options: royat.EdfaPgPayerOption(
+      //       middleName: customer.name,
+      //       birthdate: DateTime.parse("1987-03-30"),
+      //       address2: "Usman Bin Affan",
+      //       state: "Al Izdihar",
+      //     ));
 
-      _logResponse(response);
-      onTransactionSuccess(response);
 
-;        },) // Set transaction success callback
-        .onTransactionFailure((response) {
-                                    _logResponse("onTransactionFailure");
+      // Initialize Apple Pay payment
+      royat.EdfaApplePay()
+          .setOrder(royatOrder) // Set the sale order
+          .setPayer(royatPayer) // Set the payer details
+          .setApplePayMerchantID(merchantId) // Set the Apple Pay Merchant ID
+          .onAuthentication((response) {
+        _logResponse("onAuthentication");
 
-      _logResponse(response);
-      onTransactionFailure(response);
+        _logResponse(response);
+        onAuthentication(response);
+      },) // Set authentication callback
+          .onTransactionSuccess((response) {
+        _logResponse("onTransactionSuccess");
 
-        },) // Set transaction failure callback
-        .onError((response) {
-                                              _logResponse("onError");
+        _logResponse(response);
+        onTransactionSuccess(response);
 
-      _logResponse(response);
+        ;        },) // Set transaction success callback
+          .onTransactionFailure((response) {
+        _logResponse("onTransactionFailure");
 
-      onError(response);
+        _logResponse(response);
+        onTransactionFailure(response);
 
-        },) // Set error callback
-        .initialize(context); // Initialize payment processing
+      },) // Set transaction failure callback
+          .onError((response) {
+        _logResponse("onError");
+
+        _logResponse(response);
+
+        onError(response);
+
+      },) // Set error callback
+          .initialize(context); // Initialize payment processing
     }catch(e){
-                                          _logResponse("catch Error");
-      
-                                          _logResponse(e);
+      _logResponse("catch Error");
+
+      _logResponse(e);
 
     }
-  
+
   }
 
   /// Log response data for debugging purposes.
@@ -169,36 +204,36 @@ class RoyatPay {
     debugPrint("========== RoyatPay ==========");
   }
 
-  // // Callbacks for handling responses and errors
-  // Function(Map<dynamic, dynamic>) onAuthenticationCallback(
-  //     Function(Map<dynamic, dynamic>) callback) {
-  //   return (response) {
-  //     if (kDebugMode) _logResponse(response); // Log response in debug mode
-  //     callback(response); // Execute the original callback
-  //   };
-  // }
-  //
-  // Function(Map<dynamic, dynamic>) onTransactionSuccessCallback(
-  //     Function(Map<dynamic, dynamic>) callback) {
-  //   return (response) {
-  //     if (kDebugMode) _logResponse(response); // Log response in debug mode
-  //     callback(response); // Execute the original callback
-  //   };
-  // }
-  //
-  // Function(Map<dynamic, dynamic>) onTransactionFailureCallback(
-  //     Function(Map<dynamic, dynamic>) callback) {
-  //   return (response) {
-  //     if (kDebugMode) _logResponse(response); // Log response in debug mode
-  //     callback(response); // Execute the original callback
-  //   };
-  // }
-  //
-  // onErrorCallback(Map<dynamic, dynamic> callback) {
-  //   return (error) {
-  //     if (kDebugMode) _logResponse(error); // Log error response in debug mode
-  //   };
-  // }
+// // Callbacks for handling responses and errors
+// Function(Map<dynamic, dynamic>) onAuthenticationCallback(
+//     Function(Map<dynamic, dynamic>) callback) {
+//   return (response) {
+//     if (kDebugMode) _logResponse(response); // Log response in debug mode
+//     callback(response); // Execute the original callback
+//   };
+// }
+//
+// Function(Map<dynamic, dynamic>) onTransactionSuccessCallback(
+//     Function(Map<dynamic, dynamic>) callback) {
+//   return (response) {
+//     if (kDebugMode) _logResponse(response); // Log response in debug mode
+//     callback(response); // Execute the original callback
+//   };
+// }
+//
+// Function(Map<dynamic, dynamic>) onTransactionFailureCallback(
+//     Function(Map<dynamic, dynamic>) callback) {
+//   return (response) {
+//     if (kDebugMode) _logResponse(response); // Log response in debug mode
+//     callback(response); // Execute the original callback
+//   };
+// }
+//
+// onErrorCallback(Map<dynamic, dynamic> callback) {
+//   return (error) {
+//     if (kDebugMode) _logResponse(error); // Log error response in debug mode
+//   };
+// }
 }
 
 

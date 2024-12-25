@@ -1,6 +1,6 @@
 name: royat_pay
-description: "A new Flutter project."
-version: 0.0.1
+description: "RoyatPay is a library that allows Flutter applications to accept online card and apple payments through the Royat service."
+version: 0.0.3
 homepage:
 
 environment:

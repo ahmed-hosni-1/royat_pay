@@ -1,39 +1,91 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## RoyatPay
+#### RoyatPay is a library that allows Flutter applications to accept online card and apple payments through the Royat service.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+## :rocket: Installation
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+Add this to `dependencies` in your app's `pubspec.yaml`
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+royat_pay : latest_version
 ```
 
-## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## ⭐: Initialization
+### To initialize the RoyatPay instance, you can use the init method. Here's how you can initialize it:
+In the main.dart file, make sure the RoyatPay library is configured correctly:
+
+```dart
+  void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  ...
+  RoyatPay.instance.init(
+  key: "auth key",
+  password: "auth password");
+  ...
+  runApp(const MyApp());
+}
+```
+
+## :💡: Usage
+### To use the RoyatPay instance after it has been initialized, you can make payment attempts using either a card or a apple pay. Here's how you can use it:
+
+
+## 💳 Payment with Apple Pay
+### To initiate a payment with a card using the RoyatPay instance, you can use the payWithApple method. Here's how you can use it:
+
+```dart
+// Initiates a payment with a Apple Pay using the RoyatPay instance
+RoyatApplePayButton(
+    merchantId: "merchantId",
+    order: Order(id: "id", amount: 100, description: "description"),
+    customer: Customer(
+    name: "name",
+    email: "email",
+    phone: "phone",
+    address: "address",
+    city: "city",
+    country: "country",
+    lastName: "lastName",
+    ),
+    onError: (error) {},
+    onTransactionFailure: (response) {},
+    onTransactionSuccess: (response) {},
+    onAuthentication: (response) {},
+),
+
+
+```
+
+
+## 📲 Payment with Card
+### To initiate a payment with a card using the RoyatPay instance, you can use the payWithCard method. Here's how you can use it:
+
+```dart
+// Initiates a payment with a Card using the RoyatPay widget
+RoyatPayWidget(
+    useFloatingAnimation: false,
+    useGlassMorphism: false,
+    useBackgroundImage: true,
+    onSuccess: () {},
+    payData: PayData(
+    order: Order(
+    id: "id",
+    amount: 100,
+    description: "description"),
+    customer: Customer(
+    name: "name name",
+    email: "info@royat.sa",
+    phone: "1234536453",
+    address: "address",
+    city: "city",
+    country: "Saudi Arabia",
+    lastName: "lastName",
+    zip: "12345")),
+),
+
+```
+👍
+That's it, you've successfully finalized your Mobile Wallets Payments integration with Accept :tada:.
+Now, prepare endpoints to receive payment notifications from Accept's server, to learn more about the transactions webhooks
+
+###  Contact with   [Royat](https://www.royat.sa)
