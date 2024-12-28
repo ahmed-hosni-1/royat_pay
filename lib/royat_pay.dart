@@ -30,6 +30,8 @@ class RoyatPay {
   void init({required String key, required String password}) {
     _key = key;
     _password = password;
+    royat.EdfaPgSdk.instance.config(key: key, password: password);
+
   }
 
   /// Handle error callback when there is an error during payment processing.
@@ -82,21 +84,22 @@ class RoyatPay {
   void payWithApplePay({
     required BuildContext context, // Build context for displaying UI elements
     required String merchantId, // Merchant ID for Apple Pay
-    required RoyatOrder order, // Order details including amount, description, etc.
+    required RoyatOrder
+        order, // Order details including amount, description, etc.
     required RoyatPayer payer, // Environment for Apple Pay
     // required String currency,
     // required Customer customer, // Customer details for billing
     required Function(Map<dynamic, dynamic> error)
-    onError, // Callback for error during payment
+        onError, // Callback for error during payment
     required Function(Map<dynamic, dynamic> response)
-    onTransactionFailure, // Callback for transaction failure
+        onTransactionFailure, // Callback for transaction failure
     required Function(Map<dynamic, dynamic> response)
-    onTransactionSuccess, // Callback for successful transaction
+        onTransactionSuccess, // Callback for successful transaction
     required Function(Map<dynamic, dynamic> response)
-    onAuthentication, // Callback for authentication
+        onAuthentication, // Callback for authentication
   }) {
-    try{
-
+    try {
+      // royat.EdfaPgSdk.instance.config(key: _key, password: _password);
 
       // Initialize payment gateway
 
@@ -107,25 +110,21 @@ class RoyatPay {
         id: order.id,
       );
 
-
       royat.EdfaPgPayer royatPayer = royat.EdfaPgPayer(
-        ip: payer.ip,
-        city: payer.city,
-        address: payer.address,
-        zip: payer.zip,
-        firstName: payer.firstName,
-        lastName: payer.lastName,
-        email: payer.email,
-        phone: payer.phone,
-        country: payer.country,
-        options: royat.EdfaPgPayerOption(
-          address2: payer.options?.address2,
-          state: payer.options?.state,
-          birthdate: payer.options?.birthdate,
-          middleName: payer.options?.middleName
-        )
-      );
-
+          ip: payer.ip,
+          city: payer.city,
+          address: payer.address,
+          zip: payer.zip,
+          firstName: payer.firstName,
+          lastName: payer.lastName,
+          email: payer.email,
+          phone: payer.phone,
+          country: payer.country,
+          options: royat.EdfaPgPayerOption(
+              address2: payer.options?.address2,
+              state: payer.options?.state,
+              birthdate: payer.options?.birthdate,
+              middleName: payer.options?.middleName));
 
       // // Create sale order object
       // final saleOrder = royat.EdfaPgSaleOrder(
@@ -153,48 +152,52 @@ class RoyatPay {
       //       state: "Al Izdihar",
       //     ));
 
-
       // Initialize Apple Pay payment
       royat.EdfaApplePay()
           .setOrder(royatOrder) // Set the sale order
           .setPayer(royatPayer) // Set the payer details
           .setApplePayMerchantID(merchantId) // Set the Apple Pay Merchant ID
-          .onAuthentication((response) {
-        _logResponse("onAuthentication");
+          .onAuthentication(
+        (response) {
+          _logResponse("onAuthentication");
 
-        _logResponse(response);
-        onAuthentication(response);
-      },) // Set authentication callback
-          .onTransactionSuccess((response) {
-        _logResponse("onTransactionSuccess");
+          _logResponse(response);
+          onAuthentication(response);
+        },
+      ) // Set authentication callback
+          .onTransactionSuccess(
+        (response) {
+          _logResponse("onTransactionSuccess");
 
-        _logResponse(response);
-        onTransactionSuccess(response);
+          _logResponse(response);
+          onTransactionSuccess(response);
 
-        ;        },) // Set transaction success callback
-          .onTransactionFailure((response) {
-        _logResponse("onTransactionFailure");
+          ;
+        },
+      ) // Set transaction success callback
+          .onTransactionFailure(
+        (response) {
+          _logResponse("onTransactionFailure");
 
-        _logResponse(response);
-        onTransactionFailure(response);
+          _logResponse(response);
+          onTransactionFailure(response);
+        },
+      ) // Set transaction failure callback
+          .onError(
+        (response) {
+          _logResponse("onError");
 
-      },) // Set transaction failure callback
-          .onError((response) {
-        _logResponse("onError");
+          _logResponse(response);
 
-        _logResponse(response);
-
-        onError(response);
-
-      },) // Set error callback
+          onError(response);
+        },
+      ) // Set error callback
           .initialize(context); // Initialize payment processing
-    }catch(e){
+    } catch (e) {
       _logResponse("catch Error");
 
       _logResponse(e);
-
     }
-
   }
 
   /// Log response data for debugging purposes.
@@ -235,12 +238,6 @@ class RoyatPay {
 //   };
 // }
 }
-
-
-
-
-
-
 
 // library royat_pay;
 
